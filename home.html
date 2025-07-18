@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Au Bon Goût Latino - Foodtruck en Bordeaux</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f8f8;
+            color: #2e2e2e;
+            overflow-x: hidden; /* Evita el scroll horizontal */
+        }
+        .bg-primary {
+            background-color: #f1cc03;
+        }
+        .text-primary {
+            color: #f1cc03;
+        }
+        .bg-dark {
+            background-color: #2e2e2e;
+        }
+        .border-primary {
+            border-color: #f1cc03;
+        }
+        .btn-primary {
+            background-color: #f1cc03;
+            color: #2e2e2e;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary:hover {
+            background-color: #e0bb00;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        .btn-secondary {
+            background-color: #2e2e2e;
+            color: #f1cc03;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-secondary:hover {
+            background-color: #1a1a1a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        .hover-scale:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+        .card {
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 20px rgba(0, 0, 0, 0.15);
+        }
+        .cultural-element {
+            opacity: 0.02;
+            position: absolute;
+            z-index: -1;
+            font-size: 8rem;
+            pointer-events: none;
+        }
+        .cultural-element.top-left { top: 5%; left: 5%; transform: rotate(-15deg); }
+        .cultural-element.bottom-right { bottom: 5%; right: 5%; transform: rotate(15deg); }
+        .cultural-element.middle { top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(0deg); }
+
+        /* Modal estilos */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.6); 
+            justify-content: center; 
+            align-items: center; 
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 2rem;
+            border-radius: 1rem;
+            width: 80%; 
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+            text-align: center;
+        }
+        .close-button {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: #2e2e2e;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Carousel styles */
+        .carousel-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+        }
+        .carousel-slide.active {
+            opacity: 1;
+        }
+
+  
+        .hamburger-icon-container {
+            position: relative;
+            width: 28px; /* Match SVG width */
+            height: 28px; /* Match SVG height */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+    
+        .menu-default-icon {
+            position: absolute;
+            opacity: 1;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .menu-hover-icon {
+            position: absolute;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        #hamburger-button:hover {
+            background-color: rgba(241, 204, 3, 0.2);
+            border-radius: 9999px; 
+        }
+        #hamburger-button:hover .menu-default-icon {
+            opacity: 0; 
+        }
+        #hamburger-button:hover .menu-hover-icon {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Modal de confirmación -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <h2 class="text-2xl font-bold mb-4">¡Gracias por tu interés!</h2>
+            <p class="mb-6">Pronto te contactaremos para tu reserva o pedido.</p>
+            <button class="btn-primary" onclick="closeModal()">Entendido</button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-dark text-white py-4 shadow-lg">
+        <div class="container mx-auto flex items-center px-4">
+            <div class="text-3xl font-bold text-primary">Au Bon Goût Latino</div>
+
+            <!-- Botón "Descubre nuestro menú" - siempre visible -->
+            <a href="#menu" class="btn-primary ml-auto">Nuestro menú</a>
+
+            <!-- Menú hamburguesa con arepa - siempre visiblew -->
+            <button id="hamburger-button" class="relative flex justify-center items-center w-8 h-8 focus:outline-none ml-4 transition-all duration-300 ease-in-out">
+                <div class="hamburger-icon-container">
+                    <!-- Menu Icono -->
+                    <img src="http://javivelasquez.com/wp-content/uploads/2025/07/menu1.png" alt="Menu Icon" class="menu-default-icon w-full h-full object-contain">
+                    <!-- Hover Menu Icono (Arepa) -->
+                    <img src="http://javivelasquez.com/wp-content/uploads/2025/07/menu-flotar1.png" alt="Menu Hover Icon" class="menu-hover-icon w-full h-full object-contain">
+                </div>
+            </button>
+
+            <!-- Mobile Menu (Pantalla completa) -->
+            <div id="mobile-menu-overlay" class="fixed inset-0 bg-dark bg-opacity-95 z-50 flex flex-col items-center justify-center space-y-8 hidden">
+                <button id="close-mobile-menu" class="absolute top-4 right-4 text-white text-3xl focus:outline-none">
+                    <i class="fas fa-times"></i>
+                </button>
+                <a href="#menu" class="text-white text-3xl hover:text-primary transition-colors duration-300" onclick="closeMobileMenu()">Menú</a>
+                <a href="#about" class="text-white text-3xl hover:text-primary transition-colors duration-300" onclick="closeMobileMenu()">Nosotros</a>
+                <a href="#services" class="text-white text-3xl hover:text-primary transition-colors duration-300" onclick="closeMobileMenu()">Servicios</a>
+                <a href="#contact" class="text-white text-3xl hover:text-primary transition-colors duration-300" onclick="closeMobileMenu()">Contacto</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="relative h-screen flex items-center justify-center text-center hero-section bg-cover bg-center" style="background-image: url('http://javivelasquez.com/wp-content/uploads/2025/07/empanada.jpg');">
+        <!-- Carusel -->
+        <div class="carousel-container">
+            <div class="carousel-slide active" style="background-image: url('http://javivelasquez.com/wp-content/uploads/2025/07/empanada.jpg');"></div>
+            <div class="carousel-slide" style="background-image: url('http://javivelasquez.com/wp-content/uploads/2025/07/arepa22.jpg');"></div>
+            <div class="carousel-slide" style="background-image: url('http://javivelasquez.com/wp-content/uploads/2025/07/arepa11.jpg');"></div>
+        </div>
+
+        <div class="absolute inset-0 bg-black opacity-60"></div>
+        <div class="relative z-10 text-white p-8 rounded-lg max-w-3xl mx-auto">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                El Sabor Auténtico de Latinoamérica en <span class="text-primary">Bordeaux</span>
+            </h1>
+            <p class="text-xl md:text-2xl mb-8">
+                Empanadas, Arepas y mucho más, con la pasión y tradición de nuestra familia.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
+                <a href="#menu" class="btn-primary text-lg md:text-xl">Pide Online</a>
+                <a href="https://wa.me/33624584666" target="_blank" class="btn-secondary text-lg md:text-xl flex items-center justify-center">
+                    <i class="fab fa-whatsapp mr-2"></i> Pide por WhatsApp
+                </a>
+            </div>
+        </div>
+        <!-- Elementos Culturales -->
+        <div class="cultural-element top-left text-primary">🪘</div> 
+        <div class="cultural-element bottom-right text-primary">🌶️</div> 
+        <div class="cultural-element middle text-primary">🌿</div> 
+    </section>
+
+    <!-- Sobre nosotros -->
+    <section id="about" class="py-16 md:py-24 bg-white relative">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-center gap-12">
+            <div class="md:w-1/2">
+                <h2 class="text-4xl font-bold mb-6 text-dark">Nuestra Historia: Pasión y Sabor Familiar</h2>
+                <p class="text-lg leading-relaxed mb-6">
+                    Au Bon Goût Latino fue creado en 2015 por Pilar, especialista en empanadas peruanas y pequeños platos latinoamericanos. En 2021, su hijo Philippe se unió a la aventura. Nuestra pasión y saber hacer nos permitieron crear un food truck para llevar nuestras delicias a mercados, eventos privados y públicos.
+                </p>
+                <p class="text-lg leading-relaxed mb-8">
+                    Somos una empresa familiar donde la familia, la pasión, la calidad y el servicio son nuestros valores principales. Nos enorgullece compartir nuestras deliciosas especialidades latinas y ofrecer una experiencia única e inolvidable.
+                </p>
+                <a href="#contact" class="btn-primary">Conócenos mejor</a>
+            </div>
+            <div class="md:w-1/2 flex justify-center">
+                <img src="https://instagram.fscl29-1.fna.fbcdn.net/v/t39.30808-6/468859583_18078392128598591_3103950498166228193_n.jpg?stp=dst-jpg_e35_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQuaW1hZ2VfdXJsZ2VuLjEzNTB4MTY4Ny5zZHIuZjMwODA4LmRlZmF1bHRfaW1hZ2UifQ&_nc_ht=instagram.fscl29-1.fna.fbcdn.net&_nc_cat=111&_nc_oc=Q6cZ2QH-by1j3espMo5MoAvb5g2HyuYFJKT929CADTerdBReMC_K6klIuPyvHeiiau7KAuM&_nc_ohc=cuTk6NYJ-goQ7kNvwF9OUi0&_nc_gid=qIesX7NEVxNmsGHZ62kuFw&edm=APs17CUAAAAA&ccb=7-5&ig_cache_key=MzQ0NTk0MzQ4MDMwNTExMzQ5Mw%3D%3D.3-ccb7-5&oh=00_AfSAqESZBZsLNwsqRp4ZGDHupgdP4SaAXKlMJ1vUT5VMIw&oe=687CC2B4&_nc_sid=10d13b" alt="Equipo Au Bon Goût Latino" class="rounded-lg shadow-xl w-full max-w-md hover-scale">
+            </div>
+        </div>
+        <div class="cultural-element top-left text-dark">🎶</div> 
+        <div class="cultural-element bottom-right text-dark">🥑</div> 
+    </section>
+
+    <!-- Menu -->
+    <section id="menu" class="py-16 md:py-24 bg-dark text-white relative">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold mb-12 text-primary">Nuestro Menú: Un Viaje de Sabores</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <!-- Empanadas -->
+                <div class="card bg-white text-gray-800 p-8 flex flex-col items-center">
+                    <img src="http://javivelasquez.com/wp-content/uploads/2025/07/empanadas.jpg" alt="Empanadas" class="w-full rounded-lg mb-6 shadow-md">
+                    <h3 class="text-3xl font-bold mb-4">Nuestras Empanadas</h3>
+                    <p class="text-lg mb-6 text-center">
+                        Preparación auténtica, un sabor delicioso. Todas nuestras empanadas están rellenas a mano con una fina masa de trigo dulce, suave y crujiente a la vez. ¡100% caseras en Bordeaux!
+                    </p>
+                    <ul class="text-left text-lg space-y-2 mb-6">
+                        <li><i class="fas fa-check-circle text-primary mr-2"></i> Rellenos variados (carne, pollo, queso, vegetarianas)</li>
+                        <li><i class="fas fa-check-circle text-primary mr-2"></i> Masa crujiente y sabrosa</li>
+                        <li><i class="fas fa-check-circle text-primary mr-2"></i> ¡Hechas con amor!</li>
+                    </ul>
+                    <a href="#menu-details" class="btn-primary">Ver sabores</a>
+                </div>
+
+                <!-- Arepas -->
+                <div class="card bg-white text-gray-800 p-8 flex flex-col items-center">
+                    <img src="http://javivelasquez.com/wp-content/uploads/2025/07/arepas.jpg" alt="Arepas" class="w-full rounded-lg mb-6 shadow-md">
+                    <h3 class="text-3xl font-bold mb-4">Nuestras Arepas</h3>
+                    <p class="text-lg mb-6 text-center">
+                        La Arepa es una especialidad muy popular tanto en Venezuela como en Colombia. Es un pequeño pan de harina de maíz, cocinado a la plancha, crujiente por fuera y suave por dentro, ¡relleno de lo que quieras!
+                    </p>
+                    <ul class="text-left text-lg space-y-2 mb-6">
+                        <li><i class="fas fa-check-circle text-primary mr-2"></i> Rellenos tradicionales y creativos</li>
+                        <li><i class="fas fa-check-circle text-primary mr-2"></i> Sin gluten, opción saludable</li>
+                        <li><i class="fas fa-check-circle text-primary mr-2"></i> ¡Un clásico que no te puedes perder!</li>
+                    </ul>
+                    <a href="#menu-details" class="btn-primary">Personaliza tu Arepa</a>
+                </div>
+            </div>
+
+            <div class="mt-16 text-center">
+                <h3 class="text-3xl font-bold mb-6 text-primary">¡Y mucho más!</h3>
+                <p class="text-xl mb-8">
+                    Descubre nuestras bebidas refrescantes, postres caseros y otras delicias saladas y dulces que complementan tu experiencia latina.
+                </p>
+                <a href="#contact" class="btn-primary text-xl">Haz tu pedido online</a>
+            </div>
+        </div>
+        <div class="cultural-element top-left text-white">🌽</div> <!-- Corn -->
+        <div class="cultural-element bottom-right text-white">🥭</div> <!-- Mango -->
+    </section>
+
+    <!-- Origen de Ingredientes -->
+    <section class="py-16 md:py-24 bg-white relative">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold mb-12 text-dark">Origen de Nuestros Ingredientes: Frescura y Calidad</h2>
+            <p class="text-xl mb-8 max-w-3xl mx-auto">
+                Nos comprometemos a ofrecerte los sabores más auténticos utilizando ingredientes frescos y de alta calidad. Colaboramos con proveedores locales y europeos para garantizar la excelencia en cada plato.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+                <div class="p-6 rounded-lg bg-gray-100 shadow-md hover-scale">
+                    <i class="fas fa-seedling text-primary text-5xl mb-4"></i>
+                    <h3 class="text-2xl font-semibold mb-2">Vegetales Frescos</h3>
+                    <p class="text-lg">Tomates de Andalucía para tu pico de gallo, cebollas de granjas francesas.</p>
+                </div>
+                <div class="p-6 rounded-lg bg-gray-100 shadow-md hover-scale">
+                    <i class="fas fa-leaf text-primary text-5xl mb-4"></i>
+                    <h3 class="text-2xl font-semibold mb-2">Hierbas Aromáticas</h3>
+                    <p class="text-lg">Cilantro y perejil cultivados localmente para un toque fresco y vibrante.</p>
+                </div>
+                <div class="p-6 rounded-lg bg-gray-100 shadow-md hover-scale">
+                    <i class="fas fa-cow text-primary text-5xl mb-4"></i>
+                    <i class="fas fa-star text-primary text-5xl mb-4"></i> 
+                    <h3 class="text-2xl font-semibold mb-2">Carnes de Calidad</h3>
+                    <p class="text-lg">Carne de res y pollo de productores europeos, garantizando sabor y bienestar.</p>
+                </div>
+            </div>
+        </div>
+        <div class="cultural-element top-left text-dark">🌾</div> 
+        <div class="cultural-element bottom-right text-dark">🍋</div> 
+    </section>
+
+    <!-- Servicios (Catering) -->
+    <section id="services" class="py-16 md:py-24 bg-gray-50 relative">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold mb-12 text-dark">Celebra con Nosotros: Servicio de Catering</h2>
+            <p class="text-xl mb-8 max-w-3xl mx-auto">
+                ¿Buscas una experiencia culinaria única para tu próximo evento? Au Bon Goût Latino ofrece servicios de catering personalizados para celebraciones privadas y eventos corporativos.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="text-left p-8 bg-white rounded-lg shadow-xl">
+                    <h3 class="text-3xl font-bold mb-4 text-dark">Eventos Privados</h3>
+                    <p class="text-lg leading-relaxed mb-6">
+                        Desde cumpleaños hasta reuniones familiares, llevamos el auténtico sabor latino a tu hogar o lugar de celebración. Menús adaptados a tus preferencias y número de invitados.
+                    </p>
+                    <ul class="text-lg space-y-3 mb-8">
+                        <li><i class="fas fa-check-circle text-primary mr-2"></i> Menús personalizados</li>
+                        <li><i class="fas fa-check-circle text-primary mr-2"></i> Opciones vegetarianas y veganas</li>
+                        <li><i class="fas fa-check-circle text-primary mr-2"></i> Servicio profesional</li>
+                    </ul>
+                    <a href="#contact" class="btn-primary">Solicita tu presupuesto</a>
+                </div>
+                <div class="text-left p-8 bg-white rounded-lg shadow-xl">
+                    <h3 class="text-3xl font-bold mb-4 text-dark">Eventos Corporativos</h3>
+                    <p class="text-lg leading-relaxed mb-6">
+                        Dale un toque exótico y memorable a tus eventos de empresa, conferencias o lanzamientos de producto. Nuestro food truck es perfecto para un servicio original y delicioso.
+                    </p>
+                    <ul class="text-lg space-y-3 mb-8">
+                        <li><i class="fas fa-check-circle text-primary mr-2"></i> Soluciones para grandes grupos</li>
+                        <li><i class="fas fa-check-circle text-primary mr-2"></i> Flexibilidad de ubicación</li>
+                        <li><i class="fas fa-check-circle text-primary mr-2"></i> Experiencia garantizada</li>
+                    </ul>
+                    <a href="#contact" class="btn-primary">Organiza tu evento</a>
+                </div>
+            </div>
+            <div class="mt-12">
+                <a href="#contact" class="btn-secondary text-xl">Celebra con nosotros</a>
+            </div>
+        </div>
+        <div class="cultural-element top-left text-gray-200">🎉</div> <!-- Confetti/Celebration -->
+        <div class="cultural-element bottom-right text-gray-200">🥂</div> <!-- Toasting glasses -->
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="py-16 md:py-24 bg-primary text-dark text-center">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold mb-6">¡No te pierdas nuestras novedades y ofertas!</h2>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">
+                Suscríbete a nuestro boletín y recibe un <span class="font-bold">10% de descuento</span> en tu primer pedido online.
+            </p>
+            <form class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <input type="email" placeholder="Tu correo electrónico" class="p-4 rounded-lg w-full sm:w-80 focus:outline-none focus:ring-2 focus:ring-dark" required>
+                <button type="submit" class="btn-secondary">Suscríbete</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Contacto -->
+    <section id="contact" class="py-16 md:py-24 bg-white relative">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold mb-12 text-dark">Contáctanos</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div class="bg-gray-100 p-8 rounded-lg shadow-md">
+                    <h3 class="text-2xl font-bold mb-4">¿Tienes preguntas o quieres hacer un pedido?</h3>
+                    <p class="text-lg mb-6">
+                        Estamos aquí para ayudarte. Contáctanos por teléfono o correo electrónico.
+                    </p>
+                    <div class="space-y-4 text-left text-lg">
+                        <p><i class="fas fa-phone-alt text-primary mr-3"></i> Teléfono: <a href="tel:+33624584666" class="hover:underline">06.24 58.4666</a></p>
+                        <p><i class="fas fa-envelope text-primary mr-3"></i> E-mail: <a href="mailto:contact@aubongoutlatino.fr" class="hover:underline">contact@aubongoutlatino.fr</a></p>
+                        <p><i class="fas fa-map-marker-alt text-primary mr-3"></i> Encuéntranos en Bordeaux y sus alrededores</p>
+                    </div>
+                    <a href="https://wa.me/33624584666" target="_blank" class="btn-primary mt-8 flex items-center justify-center">
+                        <i class="fab fa-whatsapp mr-2"></i> Envíanos un WhatsApp
+                    </a>
+                </div>
+                <div class="bg-gray-100 p-8 rounded-lg shadow-md">
+                    <h3 class="text-2xl font-bold mb-4">¡Visítanos en nuestro Food Truck!</h3>
+                    <p class="text-lg mb-6">
+                        Consulta nuestras redes sociales para conocer nuestros próximos emplazamientos y eventos.
+                    </p>
+                    <div class="flex justify-center space-x-6 text-4xl">
+                        <a href="#" target="_blank" class="text-dark hover:text-primary transition-colors duration-300"><i class="fab fa-facebook"></i></a>
+                        <a href="#" target="_blank" class="text-dark hover:text-primary transition-colors duration-300"><i class="fab fa-instagram"></i></a>
+                    </div>
+                    <p class="text-lg mt-8">
+                        También ofrecemos la privatización de nuestro camión para tus eventos.
+                    </p>
+                    <button onclick="showModal()" class="btn-secondary mt-4">Solicitar Cotización</button>
+                </div>
+            </div>
+        </div>
+        <div class="cultural-element top-left text-gray-200">📍</div>
+        <div class="cultural-element bottom-right text-gray-200">💬</div> 
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-8">
+        <div class="container mx-auto px-4 text-center text-sm">
+            <p>&copy; 2025 Au Bon Goût Latino. Todos los derechos reservados.</p>
+            <div class="mt-4 space-x-4">
+                <a href="#" class="hover:text-primary transition-colors duration-300">Menciones legales</a>
+                <a href="#" class="hover:text-primary transition-colors duration-300">Política de privacidad</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                if (!mobileMenuOverlay.classList.contains('hidden')) { 
+                    closeMobileMenu();
+                }
+            });
+        });
+
+        // Elementos de menú de hamburguesa
+        const hamburgerButton = document.getElementById('hamburger-button');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+        const closeMobileMenuButton = document.getElementById('close-mobile-menu');
+
+        // Función para abrir menú
+        function openMobileMenu() {
+            mobileMenuOverlay.classList.remove('hidden');
+            mobileMenuOverlay.classList.add('flex');
+        }
+
+        // Función para cerrar menú
+        function closeMobileMenu() {
+            mobileMenuOverlay.classList.remove('flex');
+            mobileMenuOverlay.classList.add('hidden');
+        }
+
+        hamburgerButton.addEventListener('click', () => {
+            if (mobileMenuOverlay.classList.contains('hidden')) {
+                openMobileMenu();
+            } else {
+                closeMobileMenu();
+            }
+        });
+
+        closeMobileMenuButton.addEventListener('click', closeMobileMenu);
+
+        const confirmationModal = document.getElementById('confirmationModal');
+
+        function showModal() {
+            confirmationModal.style.display = 'flex'; // Usar flex para centrar
+        }
+
+        function closeModal() {
+            confirmationModal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == confirmationModal) {
+                closeModal();
+            }
+        }
+
+        let slideIndex = 0;
+        const slides = document.querySelectorAll('.carousel-slide');
+        const totalSlides = slides.length;
+
+        function showSlides() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+            });
+            slides[slideIndex].classList.add('active');
+        }
+
+        function nextSlide() {
+            slideIndex = (slideIndex + 1) % totalSlides;
+            showSlides();
+        }
+
+        setInterval(nextSlide, 5000);
+
+        showSlides();
+    </script>
+</body>
+</html>
