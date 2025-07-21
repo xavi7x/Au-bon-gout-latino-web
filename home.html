@@ -69,7 +69,7 @@
             box-shadow: 0 15px 20px rgba(0, 0, 0, 0.15);
         }
         .cultural-element {
-            opacity: 0.02;
+            opacity: 0.02; /* Reduced opacity for subtle background elements */
             position: absolute;
             z-index: -1;
             font-size: 8rem;
@@ -79,26 +79,26 @@
         .cultural-element.bottom-right { bottom: 5%; right: 5%; transform: rotate(15deg); }
         .cultural-element.middle { top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(0deg); }
 
-        /* Modal estilos */
+        /* Modal styles */
         .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 1000; 
+            display: none; /* Hidden by default */
+            position: fixed; /* Fixed position */
+            z-index: 1000; /* Ensure it's above everything */
             left: 0;
             top: 0;
-            width: 100%; 
-            height: 100%; 
-            overflow: auto; 
-            background-color: rgba(0,0,0,0.6); 
-            justify-content: center; 
-            align-items: center; 
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.6); /* Semi-transparent background */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
         }
         .modal-content {
             background-color: #fefefe;
             margin: auto;
             padding: 2rem;
             border-radius: 1rem;
-            width: 80%; 
+            width: 80%; /* Modal width */
             max-width: 500px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             position: relative;
@@ -144,38 +144,68 @@
             opacity: 1;
         }
 
-  
-        .hamburger-icon-container {
-            position: relative;
-            width: 28px; /* Match SVG width */
-            height: 28px; /* Match SVG height */
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* Hamburger menu icon styles */
+        .hamburger-line {
+            display: block;
+            width: 100%;
+            height: 3px;
+            margin-bottom: 4px;
+            border-radius: 2px;
+            background-color: #f1cc03; /* Primary color for the lines */
+            transition: all 0.3s ease-in-out;
+        }
+        .hamburger-line:last-child {
+            margin-bottom: 0;
+        }
+        .hamburger-line.line-middle {
+            width: 70%; /* Shorter middle line */
+            align-self: flex-end; /* Aligns to the right */
         }
 
-    
-        .menu-default-icon {
-            position: absolute;
-            opacity: 1;
-            transition: opacity 0.3s ease-in-out;
+        /* Hamburger menu animation (X transformation) */
+        .hamburger-button.active .line-top {
+            transform: translateY(7px) rotate(45deg);
+            background-color: #fff; /* White when active */
         }
-
-        .menu-hover-icon {
-            position: absolute;
+        .hamburger-button.active .line-middle {
             opacity: 0;
-            transition: opacity 0.3s ease-in-out;
+        }
+        .hamburger-button.active .line-bottom {
+            transform: translateY(-7px) rotate(-45deg);
+            background-color: #fff; /* White when active */
         }
 
-        #hamburger-button:hover {
-            background-color: rgba(241, 204, 3, 0.2);
-            border-radius: 9999px; 
+        /* Dropdown menu styles */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%; /* Position below the header */
+            right: 0;
+            background-color: #2e2e2e; /* Dark background */
+            width: 250px; /* Fixed width for dropdown */
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 40; /* Above other content, below modal */
+            border-radius: 0.5rem;
+            overflow: hidden;
+            transform: translateY(-10px); /* Initial slight offset */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out, visibility 0.3s ease-out;
         }
-        #hamburger-button:hover .menu-default-icon {
-            opacity: 0; 
-        }
-        #hamburger-button:hover .menu-hover-icon {
+        .dropdown-menu.open {
             opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .dropdown-menu a {
+            display: block;
+            padding: 1rem 1.5rem;
+            color: #f8f8f8; /* Light text color */
+            text-align: left;
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+        }
+        .dropdown-menu a:hover {
+            background-color: #f1cc03; /* Primary color on hover */
+            color: #2e2e2e; /* Dark text on hover */
         }
     </style>
 </head>
@@ -192,42 +222,42 @@
     </div>
 
     <!-- Header -->
-    <header class="bg-dark text-white py-4 shadow-lg">
+    <header class="bg-dark text-white py-4 shadow-lg relative">
         <div class="container mx-auto flex items-center px-4">
-            <div class="text-3xl font-bold text-primary">Au Bon Goût Latino</div>
+            <!-- Logo y Título -->
+            <div class="flex items-center text-3xl font-bold text-primary">
+                <!-- Aquí debes colocar tu logo. Reemplaza 'URL_DE_TU_LOGO_AQUI' con la URL real de tu imagen. -->
+                <img src="https://javivelasquez.com/wp-content/uploads/2025/07/abgl-logo.png" alt="Au Bon Goût Latino Logo" class="h-10 w-10 mr-2 rounded-full object-contain">
+                Au Bon Goût Latino
+            </div>
 
-            <!-- Botón "Descubre nuestro menú" - siempre visible -->
+            <!-- "Descubre nuestro menú" button - always visible -->
             <a href="#menu" class="btn-primary ml-auto">Nuestro menú</a>
 
-            <!-- Menú hamburguesa con arepa - siempre visiblew -->
-            <button id="hamburger-button" class="relative flex justify-center items-center w-8 h-8 focus:outline-none ml-4 transition-all duration-300 ease-in-out">
-                <div class="hamburger-icon-container">
-                    <!-- Menu Icono -->
-                    <img src="http://javivelasquez.com/wp-content/uploads/2025/07/menu1.png" alt="Menu Icon" class="menu-default-icon w-full h-full object-contain">
-                    <!-- Hover Menu Icono (Arepa) -->
-                    <img src="http://javivelasquez.com/wp-content/uploads/2025/07/menu-flotar1.png" alt="Menu Hover Icon" class="menu-hover-icon w-full h-full object-contain">
-                </div>
+            <!-- Hamburger Button - always visible -->
+            <button id="hamburger-button" class="flex flex-col justify-center items-center w-8 h-8 focus:outline-none ml-4 transition-all duration-300 ease-in-out">
+                <span class="hamburger-line line-top"></span>
+                <span class="hamburger-line line-middle"></span>
+                <span class="hamburger-line line-bottom"></span>
             </button>
 
-            <!-- Mobile Menu (Pantalla completa) -->
-            <div id="mobile-menu-overlay" class="fixed inset-0 bg-dark bg-opacity-95 z-50 flex flex-col items-center justify-center space-y-8 hidden">
-                <button id="close-mobile-menu" class="absolute top-4 right-4 text-white text-3xl focus:outline-none">
-                    <i class="fas fa-times"></i>
-                </button>
-                <a href="#menu" class="text-white text-3xl hover:text-primary transition-colors duration-300" onclick="closeMobileMenu()">Menú</a>
-                <a href="#about" class="text-white text-3xl hover:text-primary transition-colors duration-300" onclick="closeMobileMenu()">Nosotros</a>
-                <a href="#services" class="text-white text-3xl hover:text-primary transition-colors duration-300" onclick="closeMobileMenu()">Servicios</a>
-                <a href="#contact" class="text-white text-3xl hover:text-primary transition-colors duration-300" onclick="closeMobileMenu()">Contacto</a>
-            </div>
+            <!-- Dropdown Menu -->
+            <nav id="dropdown-menu" class="dropdown-menu">
+                <a href="#menu" onclick="closeDropdownMenu()">Menú</a>
+                <a href="#about" onclick="closeDropdownMenu()">Nosotros</a>
+                <a href="#services" onclick="closeDropdownMenu()">Servicios</a>
+                <a href="#contact" onclick="closeDropdownMenu()">Contacto</a>
+            </nav>
         </div>
     </header>
 
-    <!-- Hero -->
-    <section class="relative h-screen flex items-center justify-center text-center hero-section bg-cover bg-center" style="background-image: url('http://javivelasquez.com/wp-content/uploads/2025/07/empanada.jpg');">
-        <!-- Carusel -->
+    <!-- Hero Section -->
+    <section class="relative h-screen flex items-center justify-center text-center bg-cover bg-center" style="background-image: url('http://javivelasquez.com/wp-content/uploads/2025/07/empanada.jpg');">
+        <!-- Carousel Container -->
         <div class="carousel-container">
+            <!-- Placeholder images for Instagram posts. -->
             <div class="carousel-slide active" style="background-image: url('http://javivelasquez.com/wp-content/uploads/2025/07/empanada.jpg');"></div>
-            <div class="carousel-slide" style="background-image: url('http://javivelasquez.com/wp-content/uploads/2025/07/arepa22.jpg');"></div>
+            <div class="carousel-slide" style="background-image: url('https://javivelasquez.com/wp-content/uploads/2025/07/arepasfooter.jpg');"></div>
             <div class="carousel-slide" style="background-image: url('http://javivelasquez.com/wp-content/uploads/2025/07/arepa11.jpg');"></div>
         </div>
 
@@ -240,19 +270,19 @@
                 Empanadas, Arepas y mucho más, con la pasión y tradición de nuestra familia.
             </p>
             <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-                <a href="#menu" class="btn-primary text-lg md:text-xl">Pide Online</a>
+                <a href="#menu" class="btn-primary text-lg md:text-xl">Pedir Online</a>
                 <a href="https://wa.me/33624584666" target="_blank" class="btn-secondary text-lg md:text-xl flex items-center justify-center">
-                    <i class="fab fa-whatsapp mr-2"></i> Pide por WhatsApp
+                    <i class="fab fa-whatsapp mr-2"></i> Pedir por WhatsApp
                 </a>
             </div>
         </div>
-        <!-- Elementos Culturales -->
-        <div class="cultural-element top-left text-primary">🪘</div> 
-        <div class="cultural-element bottom-right text-primary">🌶️</div> 
-        <div class="cultural-element middle text-primary">🌿</div> 
+        <!-- Cultural elements for subtle background decoration -->
+        <div class="cultural-element top-left text-primary">🪘</div> <!-- Latin drum -->
+        <div class="cultural-element bottom-right text-primary">🌶️</div> <!-- Chili pepper -->
+        <div class="cultural-element middle text-primary">🌿</div> <!-- Aromatic herb leaf -->
     </section>
 
-    <!-- Sobre nosotros -->
+    <!-- About Section -->
     <section id="about" class="py-16 md:py-24 bg-white relative">
         <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-center gap-12">
             <div class="md:w-1/2">
@@ -266,63 +296,65 @@
                 <a href="#contact" class="btn-primary">Conócenos mejor</a>
             </div>
             <div class="md:w-1/2 flex justify-center">
-                <img src="https://instagram.fscl29-1.fna.fbcdn.net/v/t39.30808-6/468859583_18078392128598591_3103950498166228193_n.jpg?stp=dst-jpg_e35_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQuaW1hZ2VfdXJsZ2VuLjEzNTB4MTY4Ny5zZHIuZjMwODA4LmRlZmF1bHRfaW1hZ2UifQ&_nc_ht=instagram.fscl29-1.fna.fbcdn.net&_nc_cat=111&_nc_oc=Q6cZ2QH-by1j3espMo5MoAvb5g2HyuYFJKT929CADTerdBReMC_K6klIuPyvHeiiau7KAuM&_nc_ohc=cuTk6NYJ-goQ7kNvwF9OUi0&_nc_gid=qIesX7NEVxNmsGHZ62kuFw&edm=APs17CUAAAAA&ccb=7-5&ig_cache_key=MzQ0NTk0MzQ4MDMwNTExMzQ5Mw%3D%3D.3-ccb7-5&oh=00_AfSAqESZBZsLNwsqRp4ZGDHupgdP4SaAXKlMJ1vUT5VMIw&oe=687CC2B4&_nc_sid=10d13b" alt="Equipo Au Bon Goût Latino" class="rounded-lg shadow-xl w-full max-w-md hover-scale">
+                <img src="https://javivelasquez.com/wp-content/uploads/2025/07/488860265_18090710809598591_5791098127184917238_n.jpg" alt="Equipo Au Bon Goût Latino" class="rounded-lg shadow-xl w-full max-w-md hover-scale">
             </div>
         </div>
-        <div class="cultural-element top-left text-dark">🎶</div> 
-        <div class="cultural-element bottom-right text-dark">🥑</div> 
+        <div class="cultural-element top-left text-dark">🎶</div> <!-- Musical note -->
+        <div class="cultural-element bottom-right text-dark">🥑</div> <!-- Avocado -->
     </section>
 
-    <!-- Menu -->
+    <!-- Menu Section -->
     <section id="menu" class="py-16 md:py-24 bg-dark text-white relative">
         <div class="container mx-auto px-4 text-center">
             <h2 class="text-4xl font-bold mb-12 text-primary">Nuestro Menú: Un Viaje de Sabores</h2>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <!-- Empanadas -->
-                <div class="card bg-white text-gray-800 p-8 flex flex-col items-center">
-                    <img src="http://javivelasquez.com/wp-content/uploads/2025/07/empanadas.jpg" alt="Empanadas" class="w-full rounded-lg mb-6 shadow-md">
-                    <h3 class="text-3xl font-bold mb-4">Nuestras Empanadas</h3>
-                    <p class="text-lg mb-6 text-center">
-                        Preparación auténtica, un sabor delicioso. Todas nuestras empanadas están rellenas a mano con una fina masa de trigo dulce, suave y crujiente a la vez. ¡100% caseras en Bordeaux!
-                    </p>
-                    <ul class="text-left text-lg space-y-2 mb-6">
-                        <li><i class="fas fa-check-circle text-primary mr-2"></i> Rellenos variados (carne, pollo, queso, vegetarianas)</li>
-                        <li><i class="fas fa-check-circle text-primary mr-2"></i> Masa crujiente y sabrosa</li>
-                        <li><i class="fas fa-check-circle text-primary mr-2"></i> ¡Hechas con amor!</li>
-                    </ul>
-                    <a href="#menu-details" class="btn-primary">Ver sabores</a>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Empanada Card -->
+                <div class="card bg-white text-gray-900 p-6 flex flex-col items-center">
+                    <img src="http://javivelasquez.com/wp-content/uploads/2025/07/empanadas.jpg" alt="Empanadas" class="w-full h-40 object-cover rounded-lg mb-4 shadow-md">
+                    <h3 class="text-2xl font-bold mb-2">Empanada de Carne</h3>
+                    <p class="text-md mb-2 text-center">Carne de res sazonada con especias latinas.</p>
+                    <span class="text-primary font-bold text-xl">€4.50</span>
                 </div>
 
-                <!-- Arepas -->
-                <div class="card bg-white text-gray-800 p-8 flex flex-col items-center">
-                    <img src="http://javivelasquez.com/wp-content/uploads/2025/07/arepas.jpg" alt="Arepas" class="w-full rounded-lg mb-6 shadow-md">
-                    <h3 class="text-3xl font-bold mb-4">Nuestras Arepas</h3>
-                    <p class="text-lg mb-6 text-center">
-                        La Arepa es una especialidad muy popular tanto en Venezuela como en Colombia. Es un pequeño pan de harina de maíz, cocinado a la plancha, crujiente por fuera y suave por dentro, ¡relleno de lo que quieras!
-                    </p>
-                    <ul class="text-left text-lg space-y-2 mb-6">
-                        <li><i class="fas fa-check-circle text-primary mr-2"></i> Rellenos tradicionales y creativos</li>
-                        <li><i class="fas fa-check-circle text-primary mr-2"></i> Sin gluten, opción saludable</li>
-                        <li><i class="fas fa-check-circle text-primary mr-2"></i> ¡Un clásico que no te puedes perder!</li>
-                    </ul>
-                    <a href="#menu-details" class="btn-primary">Personaliza tu Arepa</a>
+                <!-- Arepa Card -->
+                <div class="card bg-white text-gray-900 p-6 flex flex-col items-center">
+                    <img src="http://javivelasquez.com/wp-content/uploads/2025/07/arepas.jpg" alt="Arepas" class="w-full h-40 object-cover rounded-lg mb-4 shadow-md">
+                    <h3 class="text-2xl font-bold mb-2">Arepa Reina Pepiada</h3>
+                    <p class="text-md mb-2 text-center">Pollo desmenuzado con aguacate y mayonesa.</p>
+                    <span class="text-primary font-bold text-xl">€8.00</span>
+                </div>
+
+                <!-- Tequeños Card -->
+                <div class="card bg-white text-gray-900 p-6 flex flex-col items-center">
+                    <img src="https://javivelasquez.com/wp-content/uploads/2025/07/tequenos-1.jpg" alt="Tequeños" class="w-full h-40 object-cover rounded-lg mb-4 shadow-md">
+                    <h3 class="text-2xl font-bold mb-2">Tequeños Clásicos</h3>
+                    <p class="text-md mb-2 text-center">Palitos de queso frito, crujientes por fuera.</p>
+                    <span class="text-primary font-bold text-xl">5x€7.00</span>
+                </div>
+
+                <!-- Chicha Morada Card -->
+                <div class="card bg-white text-gray-900 p-6 flex flex-col items-center">
+                    <img src="https://javivelasquez.com/wp-content/uploads/2025/07/bebidas.jpg" alt="Chicha Morada" class="w-full h-40 object-cover rounded-lg mb-4 shadow-md">
+                    <h3 class="text-2xl font-bold mb-2">Chicha Morada</h3>
+                    <p class="text-md mb-2 text-center">Bebida peruana de maíz morado, frutas y especias.</p>
+                    <span class="text-primary font-bold text-xl">€3.50</span>
                 </div>
             </div>
 
             <div class="mt-16 text-center">
-                <h3 class="text-3xl font-bold mb-6 text-primary">¡Y mucho más!</h3>
+                <h3 class="text-3xl font-bold mb-6 text-primary">¡Descubre nuestro menú completo!</h3>
                 <p class="text-xl mb-8">
-                    Descubre nuestras bebidas refrescantes, postres caseros y otras delicias saladas y dulces que complementan tu experiencia latina.
+                    Explora todas nuestras deliciosas empanadas, arepas, tequeños, bebidas y postres.
                 </p>
-                <a href="#contact" class="btn-primary text-xl">Haz tu pedido online</a>
+                <a href="#" class="btn-primary text-xl">Ver Menú Completo</a>
             </div>
         </div>
         <div class="cultural-element top-left text-white">🌽</div> <!-- Corn -->
         <div class="cultural-element bottom-right text-white">🥭</div> <!-- Mango -->
     </section>
 
-    <!-- Origen de Ingredientes -->
+    <!-- Ingredients Origin Section -->
     <section class="py-16 md:py-24 bg-white relative">
         <div class="container mx-auto px-4 text-center">
             <h2 class="text-4xl font-bold mb-12 text-dark">Origen de Nuestros Ingredientes: Frescura y Calidad</h2>
@@ -342,17 +374,17 @@
                 </div>
                 <div class="p-6 rounded-lg bg-gray-100 shadow-md hover-scale">
                     <i class="fas fa-cow text-primary text-5xl mb-4"></i>
-                    <i class="fas fa-star text-primary text-5xl mb-4"></i> 
+                    <i class="fas fa-star text-primary text-5xl mb-4"></i> <!-- Star icon for quality -->
                     <h3 class="text-2xl font-semibold mb-2">Carnes de Calidad</h3>
                     <p class="text-lg">Carne de res y pollo de productores europeos, garantizando sabor y bienestar.</p>
                 </div>
             </div>
         </div>
-        <div class="cultural-element top-left text-dark">🌾</div> 
-        <div class="cultural-element bottom-right text-dark">🍋</div> 
+        <div class="cultural-element top-left text-dark">🌾</div> <!-- Wheat/Cereal -->
+        <div class="cultural-element bottom-right text-dark">🍋</div> <!-- Lemon/Lime -->
     </section>
 
-    <!-- Servicios (Catering) -->
+    <!-- Services Section (Catering) -->
     <section id="services" class="py-16 md:py-24 bg-gray-50 relative">
         <div class="container mx-auto px-4 text-center">
             <h2 class="text-4xl font-bold mb-12 text-dark">Celebra con Nosotros: Servicio de Catering</h2>
@@ -385,9 +417,7 @@
                     <a href="#contact" class="btn-primary">Organiza tu evento</a>
                 </div>
             </div>
-            <div class="mt-12">
-                <a href="#contact" class="btn-secondary text-xl">Celebra con nosotros</a>
-            </div>
+            
         </div>
         <div class="cultural-element top-left text-gray-200">🎉</div> <!-- Confetti/Celebration -->
         <div class="cultural-element bottom-right text-gray-200">🥂</div> <!-- Toasting glasses -->
@@ -407,7 +437,7 @@
         </div>
     </section>
 
-    <!-- Contacto -->
+    <!-- Contact Section -->
     <section id="contact" class="py-16 md:py-24 bg-white relative">
         <div class="container mx-auto px-4 text-center">
             <h2 class="text-4xl font-bold mb-12 text-dark">Contáctanos</h2>
@@ -442,8 +472,8 @@
                 </div>
             </div>
         </div>
-        <div class="cultural-element top-left text-gray-200">📍</div>
-        <div class="cultural-element bottom-right text-gray-200">💬</div> 
+        <div class="cultural-element top-left text-gray-200">📍</div> <!-- Location pin -->
+        <div class="cultural-element bottom-right text-gray-200">💬</div> <!-- Speech bubble -->
     </section>
 
     <!-- Footer -->
@@ -458,45 +488,52 @@
     </footer>
 
     <script>
+        // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 document.querySelector(this.getAttribute('href')).scrollIntoView({
                     behavior: 'smooth'
                 });
-                if (!mobileMenuOverlay.classList.contains('hidden')) { 
-                    closeMobileMenu();
-                }
+                // Close dropdown menu if open
+                closeDropdownMenu();
             });
         });
 
-        // Elementos de menú de hamburguesa
+        // Hamburger menu elements
         const hamburgerButton = document.getElementById('hamburger-button');
-        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
-        const closeMobileMenuButton = document.getElementById('close-mobile-menu');
+        const dropdownMenu = document.getElementById('dropdown-menu');
 
-        // Función para abrir menú
-        function openMobileMenu() {
-            mobileMenuOverlay.classList.remove('hidden');
-            mobileMenuOverlay.classList.add('flex');
+        // Function to open the dropdown menu
+        function openDropdownMenu() {
+            dropdownMenu.classList.add('open');
+            hamburgerButton.classList.add('active'); // For hamburger X animation
         }
 
-        // Función para cerrar menú
-        function closeMobileMenu() {
-            mobileMenuOverlay.classList.remove('flex');
-            mobileMenuOverlay.classList.add('hidden');
+        // Function to close the dropdown menu
+        function closeDropdownMenu() {
+            dropdownMenu.classList.remove('open');
+            hamburgerButton.classList.remove('active'); // For hamburger X animation
         }
 
-        hamburgerButton.addEventListener('click', () => {
-            if (mobileMenuOverlay.classList.contains('hidden')) {
-                openMobileMenu();
+        // Toggle dropdown menu on hamburger button click
+        hamburgerButton.addEventListener('click', (event) => {
+            event.stopPropagation(); // Prevent click from propagating to window
+            if (dropdownMenu.classList.contains('open')) {
+                closeDropdownMenu();
             } else {
-                closeMobileMenu();
+                openDropdownMenu();
             }
         });
 
-        closeMobileMenuButton.addEventListener('click', closeMobileMenu);
+        // Close dropdown when clicking outside of it
+        window.addEventListener('click', (event) => {
+            if (!dropdownMenu.contains(event.target) && !hamburgerButton.contains(event.target)) {
+                closeDropdownMenu();
+            }
+        });
 
+        // Modal functionality
         const confirmationModal = document.getElementById('confirmationModal');
 
         function showModal() {
@@ -507,12 +544,14 @@
             confirmationModal.style.display = 'none';
         }
 
+        // Close modal when clicking outside of the content
         window.onclick = function(event) {
             if (event.target == confirmationModal) {
                 closeModal();
             }
         }
 
+        // Carousel functionality for Hero Section
         let slideIndex = 0;
         const slides = document.querySelectorAll('.carousel-slide');
         const totalSlides = slides.length;
@@ -529,8 +568,10 @@
             showSlides();
         }
 
+        // Auto-advance slides every 5 seconds
         setInterval(nextSlide, 5000);
 
+        // Initial display
         showSlides();
     </script>
 </body>
